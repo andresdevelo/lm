@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Calificación de Servicios</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group h3 {
+            margin-top: 0;
+            color: #444;
+        }
+        .options {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .option {
+            margin-right: 10px;
+        }
+        label {
+            margin-left: 5px;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+        }
+        button:hover {
+            background-color: #357ae8;
+        }
+        #adminPanel {
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px dashed #ccc;
+        }
+        #loginForm, #adminControls {
+            margin-top: 20px;
+        }
+        .adminFormGroup {
+            margin-bottom: 15px;
+        }
+        .adminFormGroup label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .adminFormGroup input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        #responsesTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        #responsesTable th, #responsesTable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #responsesTable th {
+            background-color: #f2f2f2;
+        }
+        #message {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #adminControls {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Formulario de Calificación de Servicios</h1>
+    
+    <div id="message" style="display: none;"></div>
+    
+    <form id="serviceForm">
+        <div class="form-group">
+            <h3>Servicio 1: Atención al Cliente</h3>
+            <div class="options">
+                <div class="option">
+                    <input type="radio" id="s1-bueno" name="servicio1" value="Bueno" required>
+                    <label for="s1-bueno">Bueno</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="s1-medio" name="servicio1" value="Medio">
+                    <label for="s1-medio">Medio</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="s1-regular" name="servicio1" value="Regular">
+                    <label for="s1-regular">Regular</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="s1-malo" name="servicio1" value="Malo">
+                    <label for="s1-malo">Malo</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <h3>Servicio 2: Tiempo de Respuesta</h3>
+            <div class="options">
+                <div class="option">
+                    <input type="radio" id="s2-bueno" name="servicio2" value="Bueno" required>
+                    <label for="s2-bueno">Bueno</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="s2-medio" name="servicio2" value="Medio">
+                    <label for="s2-medio">Medio</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="s2-regular" name="servicio2" value="Regular">
+                    <label for="s2-regular">Regular</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="s2-malo" name="servicio2" value="Malo">
+                    <label for="s2-malo">Malo</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <h3>Servicio 3: Calidad del Producto</h3>
+            <div class="options">
+                <div class="option">
+                    <input type="radio" id="s3-bueno" name="servicio3" value="Bueno" required>
+                    <label for="s3-bueno">Bueno</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="s3-medio" name="servicio3" value="Medio">
+                    <label for="s3-medio">Medio</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="s3-regular" name="servicio3" value="Regular">
+                    <label for="s3-regular">Regular</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="s3-malo" name="servicio3" value="Malo">
+                    <label for="s3-malo">Malo</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <h3>Servicio 4: Relación Calidad-Precio</h3>
+            <div class="options">
+                <div class="option">
+                    <input type="radio" id="s4-bueno" name="servicio4" value="Bueno" required>
+                    <label for="s4-bueno">Bueno</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="s4-medio" name="servicio4" value="Medio">
+                    <label for="s4-medio">Medio</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="s4-regular" name="servicio4" value="Regular">
+                    <label for="s4-regular">Regular</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="s4-malo" name="servicio4" value="Malo">
+                    <label for="s4-malo">Malo</label>
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit">Enviar Calificación</button>
+    </form>
+
+    <div id="adminPanel">
+        <h2>Administrador</h2>
+        
+        <div id="loginForm">
+            <div class="adminFormGroup">
+                <label for="username">Usuario:</label>
+                <input type="text" id="username" name="username">
+            </div>
+            <div class="adminFormGroup">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password">
+            </div>
+            <button type="button" id="loginBtn">Iniciar Sesión</button>
+        </div>
+        
+        <div id="adminControls">
+            <h3>Respuestas Guardadas</h3>
+            <button type="button" id="downloadBtn">Descargar Excel</button>
+            <button type="button" id="logoutBtn">Cerrar Sesión</button>
+            
+            <table id="responsesTable">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Atención al Cliente</th>
+                        <th>Tiempo de Respuesta</th>
+                        <th>Calidad del Producto</th>
+                        <th>Relación Calidad-Precio</th>
+                    </tr>
+                </thead>
+                <tbody id="responsesData">
+                    <!-- Los datos se cargarán aquí -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Verificar si localStorage ya tiene datos
+        if (!localStorage.getItem('responses')) {
+            localStorage.setItem('responses', JSON.stringify([]));
+        }
+        
+        const serviceForm = document.getElementById('serviceForm');
+        const messageDiv = document.getElementById('message');
+        const loginForm = document.getElementById('loginForm');
+        const adminControls = document.getElementById('adminControls');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const responsesData = document.getElementById('responsesData');
+        
+        // Manejar envío del formulario
+        serviceForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Obtener valores seleccionados
+            const servicio1 = document.querySelector('input[name="servicio1"]:checked').value;
+            const servicio2 = document.querySelector('input[name="servicio2"]:checked').value;
+            const servicio3 = document.querySelector('input[name="servicio3"]:checked').value;
+            const servicio4 = document.querySelector('input[name="servicio4"]:checked').value;
+            
+            // Crear objeto con fecha y respuestas
+            const respuesta = {
+                fecha: new Date().toLocaleString(),
+                servicio1: servicio1,
+                servicio2: servicio2,
+                servicio3: servicio3,
+                servicio4: servicio4
+            };
+            
+            // Guardar en localStorage
+            const responses = JSON.parse(localStorage.getItem('responses'));
+            responses.push(respuesta);
+            localStorage.setItem('responses', JSON.stringify(responses));
+            
+            // Mostrar mensaje de éxito
+            showMessage('Respuesta enviada con éxito. ¡Gracias por su calificación!', 'success');
+            
+            // Limpiar formulario
+            serviceForm.reset();
+        });
+        
+        // Función para mostrar mensajes
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = type;
+            messageDiv.style.display = 'block';
+            
+            // Ocultar después de 5 segundos
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Manejar inicio de sesión
+        loginBtn.addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'fede' && password === '66') {
+                loginForm.style.display = 'none';
+                adminControls.style.display = 'block';
+                loadResponses();
+            } else {
+                showMessage('Usuario o contraseña incorrectos', 'error');
+            }
+        });
+        
+        // Manejar cierre de sesión
+        logoutBtn.addEventListener('click', function() {
+            loginForm.style.display = 'block';
+            adminControls.style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        });
+        
+        // Cargar respuestas en la tabla
+        function loadResponses() {
+            const responses = JSON.parse(localStorage.getItem('responses'));
+            responsesData.innerHTML = '';
+            
+            responses.forEach(response => {
+                const row = document.createElement('tr');
+                
+                // Crear celdas para cada dato
+                const fechaCell = document.createElement('td');
+                fechaCell.textContent = response.fecha;
+                
+                const servicio1Cell = document.createElement('td');
+                servicio1Cell.textContent = response.servicio1;
+                
+                const servicio2Cell = document.createElement('td');
+                servicio2Cell.textContent = response.servicio2;
+                
+                const servicio3Cell = document.createElement('td');
+                servicio3Cell.textContent = response.servicio3;
+                
+                const servicio4Cell = document.createElement('td');
+                servicio4Cell.textContent = response.servicio4;
+                
+                // Añadir celdas a la fila
+                row.appendChild(fechaCell);
+                row.appendChild(servicio1Cell);
+                row.appendChild(servicio2Cell);
+                row.appendChild(servicio3Cell);
+                row.appendChild(servicio4Cell);
+                
+                // Añadir fila a la tabla
+                responsesData.appendChild(row);
+            });
+        }
+        
+        // Descargar datos como Excel
+        downloadBtn.addEventListener('click', function() {
+            const responses = JSON.parse(localStorage.getItem('responses'));
+            
+            // Preparar datos para Excel
+            const data = [
+                ['Fecha', 'Atención al Cliente', 'Tiempo de Respuesta', 'Calidad del Producto', 'Relación Calidad-Precio']
+            ];
+            
+            responses.forEach(response => {
+                data.push([
+                    response.fecha,
+                    response.servicio1,
+                    response.servicio2,
+                    response.servicio3,
+                    response.servicio4
+                ]);
+            });
+            
+            // Crear libro y hoja de Excel
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, 'Respuestas');
+            
+            // Generar archivo Excel y descargar
+            const fechaDescarga = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(wb, `Calificaciones_${fechaDescarga}.xlsx`);
+        });
+    </script>
+</body>
+</html>
